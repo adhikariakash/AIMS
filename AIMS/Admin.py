@@ -1,5 +1,7 @@
 import datetime
 import uuid
+from cryptography.fernet import Fernet
+
 
 import AIMS.Repository as repo
 from sqlite3 import Error
@@ -47,6 +49,11 @@ class admin:
         if password and len(password) >= 6:
             re_check = input('Re-enter your password: ')
             if password == re_check:
+                file = open('key.txt', 'rb')
+                key = file.read()
+                cipher_suite = Fernet(key)
+                file.close()
+                password = cipher_suite.decrypt(password.encode())
                 print("Password created successfully")
                 return password
             self.input_password()
@@ -54,4 +61,4 @@ class admin:
         self.input_password()
 
 
-admin().create_member()
+# admin().create_member()
