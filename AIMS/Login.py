@@ -14,7 +14,7 @@ class login:
             key = file.read()
             self.cipher_suite = Fernet(key)
             file.close()
-        except IOError or FileNotFoundError  as e:
+        except IOError or FileNotFoundError as e:
             print(e)
 
     def check(self):
@@ -29,7 +29,7 @@ class login:
                 connection.commit()
                 cursor.close()
                 if retrieve_password:
-                    if password.encode() == self.cipher_suite.decrypt(retrieve_password[0][0].encode()):
+                    if password.encode() == self.cipher_suite.decrypt(retrieve_password[0][0]):
                         print("Access granted")
                         return True
                     print("wrong password")
