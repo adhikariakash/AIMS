@@ -11,34 +11,32 @@ connection = repo.sql_connection()
 
 
 class admin:
-    def __init__(self):
-        # ch = ''
-        # while ch != 9:
-        #     print("GPM MENU")
-        #     print("1.ADD MEMBER\t2.UPDATE MEMBER\t3..DELETE MEMBER\t4.")
-        #     print("\tSelect Your Option (1-9)")
-        #     ch = input()
-        #     if ch == '1':
-        #         self.createMember()
-        #     elif ch == '2':
-        #         self.updateMember()
-        #     elif ch == '3':
-        #         self.deleteMember()
-        #     elif ch == '4':
-        #         self.assignProjectToMember()
-        #     elif ch == '5':
-        #         self.updateProjectOfMember()
-        #     elif ch == '6':
-        #         self.delete_member_from_project()
-        #     elif ch == '7':
-        #         self.showComplaints()
-        #     elif ch == '8':
-        #         self.issueJobCard()
-        #     elif ch == '9':
-        #         break
-        #     else:
-        #         print("Invalid choice")
-        pass
+
+    def select_choice(self):
+        ch = ''
+        while ch != 8:
+            print("ADMIN MENU")
+            print(
+                "1.ADD MEMBER 2.UPDATE MEMBER 3.DELETE MEMBER 4.CREATE TEAM 5.UPDATE TEAM 6.DELETE TEAM 7.GIVE "
+                "JUDGEMENT 8.EXIT")
+            ch = input("Select Your Option (1-8): ")
+            if ch == '1':
+                self.create_member()
+            elif ch == '2':
+                self.update_member()
+            elif ch == '3':
+                self.delete_member()
+            elif ch == '4':
+                self.create_team()
+            elif ch == '5':
+                self.update_team()
+            elif ch == '6':
+                self.delete_team()
+            elif ch == '7':
+                self.final_judgement()
+            else:
+                print("Invalid choice")
+        return True
 
     def create_member(self):
         print("Creating new member")
@@ -68,8 +66,11 @@ class admin:
                 "\'{}\')".format(role_id, working_zone, name, phone_number, 'False'))
             connection.commit()
             cursor.close()
+            print("New member created")
+            return True
         except Error as e:
             print(e)
+            return False
 
     def update_member(self):
         print("Updating a member")
@@ -386,12 +387,41 @@ class admin:
             return False
         return True
 
-    # def final_judgement(self):
-    #     try:
-    #         connection = repo.sql_connection()
-    #         cursor = connection.cursor()
-    #
-
+    def final_judgement(self):
+        try:
+            connection = repo.sql_connection()
+            cursor = connection.cursor()
+            reports = cursor.execute("SELECT * from final_report where feedback IS NOT NULL").fetchall()
+            if reports:
+                for report in reports:
+                    print("Report Id: {}".format(report[0]))
+                    print("Complain Id: {}".format(report[1]))
+                    print("Date of accident: {}".format(report[2]))
+                    print("Injured people: {}".format(report[3]))
+                    print("Dead people: {}".format(report[4]))
+                    print("Short Description: {}".format(report[5]))
+                    print("Root Cause: {}".format(report[6]))
+                    print("Feedback: {}".format(report[7]))
+                    print("----------------------------")
+                complain_id = input("Enter the complain id for which you want to give judgement: ")
+                while not self.validate_complaintid(complain_id, cursor):
+                    print("Entered complain id is wrong")
+                    complain_id = input("Enter the complain id for which you want to give judgement: ")
+                verdict = input("Give your final verdict: ")
+                while not "".join(verdict.split(' ')).isalnum():
+                    print("Give a proper verdict")
+                    verdict = input("Give your final verdict: ")
+                cursor.execute(
+                    "UPDATE complains SET status = 'closed',verdict = \'{}\' WHERE complain_id = \'{}\'".format(
+                        verdict, complain_id))
+                connection.commit()
+                cursor.close()
+                return True
+            print("No report to show")
+            return True
+        except Error as e:
+            print(e)
+            return False
 
 # admin().update_member()
 # admin().create_member()
@@ -399,3 +429,4 @@ class admin:
 # admin().create_team()
 # admin().delete_team()
 # admin().update_team()
+# admin().final_judgement()

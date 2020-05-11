@@ -26,7 +26,7 @@ class dashboard:
                 print("Invalid choice")
 
     def login_admin(self):
-        if login().check():
+        if login().check_admin():
             print("Enter into admin")
         else:
             self.login_admin()
@@ -38,7 +38,7 @@ class dashboard:
             self.login_team()
 
     def login_emp(self):
-        if login().check_employee():
+        if login().check_emp():
             print("Enter into emp")
         else:
             self.login_emp()

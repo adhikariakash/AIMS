@@ -48,18 +48,21 @@ class employee:
 
     def show_complain(self):
         try:
-            print("All complains")
             cursor = connection.cursor()
             records = cursor.execute(
                 "select complain_id,description,working_zone,status,created_at from complains where delete_value = "
                 "\'False\' and role_id = \'{}\'".format(self.role_id)).fetchall()
-            for row in records:
-                print("complain_id= ", row[0])
-                print("Description= ", row[1])
-                print("working_zone= ", row[2])
-                print("status= ", row[3])
-                print("Date of incident= ", row[4])
-                print("-----------------------")
+            if records:
+                print("All complains")
+                for row in records:
+                    print("Complain_id= ", row[0])
+                    print("Description= ", row[1])
+                    print("Working_zone= ", row[2])
+                    print("Status= ", row[3])
+                    print("Date of incident= ", row[4])
+                    print("-----------------------")
+                return True
+            print("No complains found")
             return True
         except Error as e:
             print(e)
