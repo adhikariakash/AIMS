@@ -3,12 +3,12 @@ from AIMS.Login import login
 
 class dashboard:
     """
-    THis is
+    This is dashboard class
     """
 
     def main(self):
         """
-        This is like main page off console will give different options
+        This is like main page of AIMS console application,will give different options
         :return: True/False
         """
         print('AIMS(Accident & Incident Management System)')
