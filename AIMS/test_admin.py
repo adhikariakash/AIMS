@@ -1,9 +1,11 @@
+import unittest
+
 import mock
 from AIMS.Admin import admin
 import _sqlite3
 
 
-class Testadmin:
+class Testadmin(unittest.TestCase):
 
     @mock.patch('AIMS.Admin.admin.create_member')
     @mock.patch('AIMS.Admin.input')
@@ -89,7 +91,7 @@ class Testadmin:
     @mock.patch('AIMS.Admin.admin.input_password')
     def test_create_member_success(self, pwd, usr, input, db):
         usr.return_value = 'abcd'
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
         input.side_effect = ['Factory', 'abc', '9897043213']
         mocksql = mock.Mock()
         db.sql_connection.return_value = mocksql
@@ -98,13 +100,13 @@ class Testadmin:
 
         assert admin().create_member() == True
 
-    @mock.patch('AIMS.Admin.repo.sql_connection')
+    @mock.patch('AIMS.Admin.repo')
     @mock.patch('AIMS.Admin.input')
     @mock.patch('AIMS.Admin.admin.input_username')
     @mock.patch('AIMS.Admin.admin.input_password')
     def test_create_member_others_employee_validation_failed(self, pwd, usr, input, db):
         usr.return_value = 'abcd'
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
         input.side_effect = ['Factory', 'ab2c', 'abc', '9897043213']
         mocksql = mock.Mock()
         db.sql_connection.return_value = mocksql
@@ -119,7 +121,7 @@ class Testadmin:
     @mock.patch('AIMS.Admin.admin.input_password')
     def test_create_member_password_validation_failed(self, pwd, usr, input, db):
         usr.return_value = 'abcd'
-        pwd.side_effect = [None, 'abcdefgh']
+        pwd.side_effect = [None, 'abcdefgh'.encode()]
         input.side_effect = ['Factory', 'ab2c', 'abc', '9897043213']
         mocksql = mock.Mock()
         db.sql_connection.return_value = mocksql
@@ -128,13 +130,13 @@ class Testadmin:
 
         assert admin().create_member() == True
 
-    @mock.patch('AIMS.Admin.repo.sql_connection')
+    @mock.patch('AIMS.Admin.repo')
     @mock.patch('AIMS.Admin.input')
     @mock.patch('AIMS.Admin.admin.input_username')
     @mock.patch('AIMS.Admin.admin.input_password')
     def test_create_member_number_validation_failed(self, pwd, usr, input, db):
         usr.return_value = 'abcd'
-        pwd.side_effect = 'abcdefgh'
+        pwd.return_value = 'abcdefgh'.encode()
         input.side_effect = ['Factory', 'abc', 'ab123', '9897067188']
         mocksql = mock.Mock()
         db.sql_connection.return_value = mocksql
@@ -341,7 +343,7 @@ class Testadmin:
         mocksql.fetchall.return_value = data1
         input.side_effect = ['ea384fc3-a083-425e-b80a-ea88827b39df', '1', '5039220d-353d-4ce3-a189-48ec8c1a8566', '2',
                              'dummyteamname']
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
 
         assert admin().create_team() == True
 
@@ -361,7 +363,7 @@ class Testadmin:
         input.side_effect = [None, 'ea384fc3-a083-425e-b80a-ea88827b39df', '1', '5039220d-353d-4ce3-a189-48ec8c1a8566',
                              '2',
                              'dummyteamname']
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
 
         assert admin().create_team() == True
 
@@ -392,7 +394,7 @@ class Testadmin:
                              '5039220d-353d-4ce3-a189-48ec8c1a8566',
                              '2',
                              'dummyteamname']
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
 
         assert admin().create_team() == True
 
@@ -413,7 +415,7 @@ class Testadmin:
                              None,
                              'dummyteamname']
         vtn.side_effect = [False, True]
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
 
         assert admin().create_team() == True
 
@@ -433,7 +435,7 @@ class Testadmin:
         input.side_effect = ['ea384fc3-a083-425e-b80a-ea88827b39df', '5', '1', '5039220d-353d-4ce3-a189-48ec8c1a8566',
                              '2',
                              'dummyteamname']
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
 
         assert admin().create_team() == True
 
@@ -453,7 +455,7 @@ class Testadmin:
         mocksql.fetchall.return_value = data1
         input.side_effect = ['ea384fc3-a083-425e-b80a-ea88827b39df', '2',
                              'ghnj78', 'teamA']
-        pwd.return_value = 'xcvb'
+        pwd.return_value = 'xcvb'.encode()
         assert admin().create_team() == True
 
     @mock.patch('AIMS.Admin.admin.validate_team_name', return_value=True)
@@ -471,7 +473,7 @@ class Testadmin:
         mocksql.fetchall.return_value = data1
         input.side_effect = ['ea384fc3-a083-425e-b80a-ea88827b39df', '1', '5039220d-353d-4ce3-a189-48ec8c1a8566', '2',
                              'dummyteamname']
-        pwd.side_effect = [None, 'xcvb']
+        pwd.side_effect = [None, 'xcvb'.encode()]
 
         assert admin().create_team() == True
 

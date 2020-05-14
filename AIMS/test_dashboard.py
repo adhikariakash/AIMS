@@ -1,8 +1,11 @@
+import unittest
+
 import mock
 from AIMS.Dashboard import dashboard
 import _sqlite3
 
-class Testdashboard:
+
+class Testdashboard(unittest.TestCase):
 
     @mock.patch('AIMS.Dashboard.login')
     @mock.patch('AIMS.Dashboard.input')
@@ -33,4 +36,3 @@ class Testdashboard:
         input.side_effect = ['10', '4']
 
         assert dashboard().main() == True
-

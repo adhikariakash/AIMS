@@ -1,10 +1,12 @@
 import sqlite3
+import unittest
+
 import mock
 
 from AIMS.SupervisingTeam import supervising_team
 
 
-class TestSupervisingTeam:
+class TestSupervisingTeam(unittest.TestCase):
 
     @mock.patch('AIMS.SupervisingTeam.repo')
     @mock.patch('AIMS.SupervisingTeam.input')

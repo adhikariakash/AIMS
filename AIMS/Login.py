@@ -9,7 +9,13 @@ from AIMS.SupervisingTeam import supervising_team
 
 
 class login:
+    """
+    This is login class where login function for all the members
+    """
     def __init__(self):
+        """
+        Initialization method
+        """
         try:
             file = open('key.txt', 'rb')
             key = file.read()
@@ -19,6 +25,10 @@ class login:
             print(e)
 
     def check_admin(self):
+        """
+        Login for Admin
+        :return: True/False
+        """
         username = input("Enter your username: ")
         # password = getpass.getpass('Enter your password: ')
         password = input("Enter your password: ")
@@ -46,6 +56,10 @@ class login:
         return False
 
     def check_emp(self):
+        """
+        Login for Employee
+        :return: True/False
+        """
         username = input("Enter your username: ")
         # password = getpass.getpass('Enter your password: ')
         password = input("Enter your password: ")
@@ -74,6 +88,10 @@ class login:
         return False
 
     def check_team(self):
+        """
+        Login for Team
+        :return: True/False
+        """
         team_name = input("Enter your Team name: ")
         # password = getpass.getpass('Enter your team password: ')
         password = input("Enter your password: ")

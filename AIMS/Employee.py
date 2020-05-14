@@ -5,10 +5,21 @@ import datetime
 
 
 class employee:
+    """
+    This is Employee Class
+    """
     def __init__(self, role_id):
+        """
+        Initializer method
+        :param role_id:
+        """
         self.role_id = role_id
 
     def selection(self):
+        """
+        Selection of features for Employee
+        :return: True/False
+        """
         ch = ''
         while ch != 3:
             ch = input("choose 1.File complain 2.Show complain 3.Exit: ")
@@ -22,6 +33,10 @@ class employee:
                 print("Invalid choice")
 
     def complain_file(self):
+        """
+        Complain a file against any incident happened
+        :return: True/False
+        """
         try:
             print("file your complain here")
             created_at = datetime.datetime.today()
@@ -56,6 +71,10 @@ class employee:
             return False
 
     def show_complain(self):
+        """
+        Show list of complain filed
+        :return: True/False
+        """
         try:
             connection = repo.sql_connection()
             cursor = connection.cursor()

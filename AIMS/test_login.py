@@ -1,10 +1,12 @@
 import sqlite3
+import unittest
+
 import mock
 
 from AIMS.Login import login
 
 
-class TestLogin:
+class TestLogin(unittest.TestCase):
     @mock.patch('AIMS.Login.Fernet')
     @mock.patch('AIMS.Login.repo')
     @mock.patch('AIMS.Login.input')

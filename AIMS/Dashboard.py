@@ -2,8 +2,15 @@ from AIMS.Login import login
 
 
 class dashboard:
+    """
+    THis is
+    """
 
     def main(self):
+        """
+        This is like main page off console will give different options
+        :return: True/False
+        """
         print('AIMS(Accident & Incident Management System)')
         ch = ''
         while ch != 4:

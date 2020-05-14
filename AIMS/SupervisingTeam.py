@@ -6,11 +6,22 @@ import datetime
 
 
 class supervising_team:
+    """
+    This is Supervising Team Class
+    """
 
     def __init__(self, team_id):
+        """
+        Initialization method
+        :param team_id:
+        """
         self.team_id = team_id
 
     def selection(self):
+        """
+        Selection of features for Supervising team
+        :return: True/False
+        """
         ch = ''
         while ch != '2':
             ch = input("1.Make your Report 2.Exit: ")
@@ -22,6 +33,10 @@ class supervising_team:
                 print("Invalid choice")
 
     def report_accident(self):
+        """
+        Generate report for the existing complained by team after all research
+        :return: True/False
+        """
         try:
             connection = repo.sql_connection()
             cursor = connection.cursor()
@@ -61,6 +76,10 @@ class supervising_team:
             return False
 
     def check_complain_exist(self):
+        """
+        Check complain is already exist
+        :return: True/False
+        """
         try:
             connection = repo.sql_connection()
             cursor = connection.cursor()

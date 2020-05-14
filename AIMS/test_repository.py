@@ -1,11 +1,12 @@
-"""Test DBConnection"""
 import sqlite3
+import unittest
+
 import mock
 # import AIMS.Repository as sql_connection
 from AIMS.Repository import sql_connection
 
 
-class TestRepository:
+class TestRepository(unittest.TestCase):
     def test_sql_connection_try(self):
         assert isinstance(sql_connection(), type(sqlite3.Connection("")))
 

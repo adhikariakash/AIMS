@@ -5,6 +5,10 @@ from AIMS import script
 
 
 def sql_connection():
+    """
+    connection with sql database
+    :return: True/False
+    """
     try:
         connection = sqlite3.connect('AIMS')
         cursor = connection.cursor()

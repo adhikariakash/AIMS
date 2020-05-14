@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coverage report</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.index_ready);
+    </script>
+</head>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage report:
+            <span class="pc_cov">97%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
+    </p>
+    </div>
+</div>
+<div id="index">
+    <table class="index">
+        <thead>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>1437</td>
+                <td>42</td>
+                <td>0</td>
+                <td class="right" data-ratio="1395 1437">97%</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_Admin_py.html">AIMS/Admin.py</a></td>
+                <td>358</td>
+                <td>16</td>
+                <td>0</td>
+                <td class="right" data-ratio="342 358">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_Dashboard_py.html">AIMS/Dashboard.py</a></td>
+                <td>24</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="23 24">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_Employee_py.html">AIMS/Employee.py</a></td>
+                <td>65</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="63 65">97%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_Login_py.html">AIMS/Login.py</a></td>
+                <td>88</td>
+                <td>18</td>
+                <td>0</td>
+                <td class="right" data-ratio="70 88">80%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_Repository_py.html">AIMS/Repository.py</a></td>
+                <td>12</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="9 12">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_SupervisingTeam_py.html">AIMS/SupervisingTeam.py</a></td>
+                <td>72</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="72 72">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS___init___py.html">AIMS/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_script_py.html">AIMS/script.py</a></td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="1 1">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_admin_py.html">AIMS/test_admin.py</a></td>
+                <td>559</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="559 559">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_dashboard_py.html">AIMS/test_dashboard.py</a></td>
+                <td>23</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="23 23">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_employee_py.html">AIMS/test_employee.py</a></td>
+                <td>55</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="55 55">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_login_py.html">AIMS/test_login.py</a></td>
+                <td>106</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="106 106">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_repository_py.html">AIMS/test_repository.py</a></td>
+                <td>10</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="10 10">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="AIMS_test_supervising_team_py.html">AIMS/test_supervising_team.py</a></td>
+                <td>64</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="62 64">97%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
+            created at 2020-05-14 18:10
+        </p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,11 +1,12 @@
 import sqlite3
+import unittest
 
 import mock
 
 from AIMS.Employee import employee
 
 
-class TestEmployee:
+class TestEmployee(unittest.TestCase):
 
     @mock.patch('AIMS.Employee.repo.sql_connection')
     @mock.patch('AIMS.Employee.input')

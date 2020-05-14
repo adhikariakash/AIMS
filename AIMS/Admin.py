@@ -1,28 +1,28 @@
+import calendar
 import datetime
 import re
 import uuid
-from calendar import calendar
 
 from cryptography.fernet import Fernet
-import getpass
 import pandas as pd
-# import matplotlib.pyplot as plot
+import matplotlib.pyplot as plot
 
 import AIMS.Repository as repo
 from sqlite3 import Error
 
 
 class admin:
+    """ This is Admin class of AIMS """
 
     def select_choice(self):
+        """ Selection of admin features  """
         ch = ''
         while ch != "10":
             print("ADMIN MENU")
             print(
                 "1.ADD MEMBER 2.UPDATE MEMBER 3.DELETE MEMBER 4.CREATE TEAM 5.UPDATE TEAM 6.DELETE TEAM 7.GIVE "
                 "JUDGEMENT 8.VISUALISE DATA 9.VISUALISE ACCIDENTS 10.EXIT")
-            ch = input("Select Your Option (1-8): ")
-            print(ch)
+            ch = input("Select Your Option (1-10): ")
             if ch == '1':
                 self.create_member()
             elif ch == '2':
@@ -47,6 +47,9 @@ class admin:
                 print("Invalid choice")
 
     def create_member(self):
+        """Create new Employee of the organisation
+           :return:True/False
+        """
         print("Creating new member")
         username = self.input_username()
         password = self.input_password()
@@ -82,6 +85,9 @@ class admin:
             return False
 
     def update_member(self):
+        """ Update existing employee of the organisation
+            :return:True/False
+        """
         print("Updating a member")
         try:
             connection = repo.sql_connection()
@@ -104,6 +110,10 @@ class admin:
             return False
 
     def delete_member(self):
+        """
+        Delete existing employee of the organisation
+        :return: True/False
+        """
         try:
             print("Deleting a member")
             connection = repo.sql_connection()
@@ -143,6 +153,10 @@ class admin:
             return False
 
     def input_username(self):
+        """
+        Check username existence from the login table
+        :return: True/False
+        """
         username = input("Enter username of member: ")
         connection = repo.sql_connection()
         cursor = connection.cursor()
@@ -158,6 +172,10 @@ class admin:
         self.input_username()
 
     def input_password(self):
+        """
+        Generate password
+        :return: True/False
+        """
         password = input("Enter your password...should be atleast of length 6: ")
         re_check = input('Re-enter your password: ')
         if password and len(password) >= 6 and password == re_check:
@@ -172,6 +190,11 @@ class admin:
         return None
 
     def is_updated(self, cursor):
+        """
+        To check which field you want to update
+        :param cursor: connection/command to execute query
+        :return: True/False
+        """
         role_id = input("Select the role id for which you need to update the record: ")
         if role_id and re.match("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
                                 role_id):
@@ -203,6 +226,10 @@ class admin:
         self.is_updated(cursor)
 
     def create_team(self):
+        """
+        Create supervising team
+        :return:True/False
+        """
         try:
             print("Creating a new team to investigate")
             connection = repo.sql_connection()
@@ -278,6 +305,10 @@ class admin:
             return False
 
     def update_team(self):
+        """
+        Update the team
+        :return: True/False
+        """
         try:
             print("Updating the team")
             connection = repo.sql_connection()
@@ -358,6 +389,10 @@ class admin:
             return False
 
     def delete_team(self):
+        """
+        Delete existing team
+        :return: True/False
+        """
         try:
             print("Deleting a team")
             connection = repo.sql_connection()
@@ -384,6 +419,12 @@ class admin:
             return False
 
     def validate_roleid(self, role_id, cursor):
+        """
+        validate employee
+        :param role_id: role_id of employee
+        :param cursor: command/connection to sql
+        :return: True/False
+        """
         if not role_id:
             return False
         if not cursor.execute(
@@ -395,6 +436,12 @@ class admin:
         return True
 
     def validate_complaintid(self, complain_id, cursor):
+        """
+        validate complain_id
+        :param complain_id: unique id for each complain
+        :param cursor: command/connection to sql
+        :return: True/False
+        """
         if not complain_id:
             return False
         if not cursor.execute(
@@ -406,6 +453,10 @@ class admin:
         return True
 
     def final_judgement(self):
+        """
+        Judgement by Admin
+        :return: True/False
+        """
         try:
             connection = repo.sql_connection()
             cursor = connection.cursor()
@@ -442,6 +493,12 @@ class admin:
             return False
 
     def validate_team_name(self, team_name, cursor):
+        """
+        validate team_name from the supervising_team table
+        :param team_name: unique name of each team
+        :param cursor: command/connection to sql
+        :return: True/False
+        """
         try:
             if cursor.execute("SELECT * FROM supervising_team where team_name=\'{}\'".format(team_name)).fetchall():
                 return False
@@ -451,37 +508,43 @@ class admin:
             return False
 
     def visualise_data(self):
-        # try:
-        #     connection = repo.sql_connection()
-        #     query = "select * from complains"
-        #     df = pd.read_sql_query(query, connection)
-        #     df['date'] = pd.to_datetime(df['created_at'])
-        #     df['month'] = df['date'].dt.month
-        #     df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
-        #     df_result = df.groupby(['month']).complain_id.agg('count').to_frame(
-        #         'number_of_cases').reset_index()
-        #     df_result = pd.DataFrame(df_result)
-        #     df_result = df_result.sort_values("month", ascending=False)
-        #     df_result.plot(x="month", y="number_of_cases", kind="bar")
-        #     plot.show()
-        #     return True
-        # except Error as e:
-        #     print(e)
-        #     return False
-        pass
+        """
+        data present about the accidents visualise the no of accidents and incidents happened in a particular month(open vs WIP vs closed)
+        :return:True/False
+        """
+        try:
+            connection = repo.sql_connection()
+            query = "select * from complains"
+            df = pd.read_sql_query(query, connection)
+            df['date'] = pd.to_datetime(df['created_at'])
+            df['month'] = df['date'].dt.month
+            df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
+            df_result = df.groupby(['month']).complain_id.agg('count').to_frame(
+                'number_of_cases').reset_index()
+            df_result = pd.DataFrame(df_result)
+            df_result = df_result.sort_values("month", ascending=False)
+            df_result.plot(x="month", y="number_of_cases", kind="bar")
+            plot.show()
+            return True
+        except Error as e:
+            print(e)
+            return False
 
     def visualise_accidents(self):
-        # try:
-        #     connection = repo.sql_connection()
-        #     query = "select complains.complain_type,report.injured_people,report.dead_people as casualty_rate from " \
-        #             "complains INNER JOIN final_report report using(complain_id) "
-        #     df = pd.read_sql_query(query, connection)
-        #     df = df.groupby('complain_type')['casualty_rate'].sum().reset_index()
-        #     df = pd.DataFrame(df)
-        #     df.plot(x="complain_type", y="casualty_rate", kind="bar")
-        #     plot.show()
-        #     print(df)
-        # except Error as e:
-        #     print(e)
-        #     return False
-        pass
+        """
+        Death rate/ casualty rates per different types of accidents.
+        :return:True/False
+        """
+        try:
+            connection = repo.sql_connection()
+            query = "select complains.complain_type,report.injured_people,report.dead_people as casualty_rate from " \
+                    "complains INNER JOIN final_report report using(complain_id) "
+            df = pd.read_sql_query(query, connection)
+            df = df.groupby('complain_type')['casualty_rate'].sum().reset_index()
+            df = pd.DataFrame(df)
+            df.plot(x="complain_type", y="casualty_rate", kind="bar")
+            plot.show()
+            print(df)
+        except Error as e:
+            print(e)
+            return False
