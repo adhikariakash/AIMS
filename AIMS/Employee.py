@@ -3,8 +3,6 @@ import AIMS.Repository as repo
 from sqlite3 import Error
 import datetime
 
-connection = repo.sql_connection()
-
 
 class employee:
     def __init__(self, role_id):
@@ -19,9 +17,9 @@ class employee:
             elif ch == '2':
                 self.show_complain()
             elif ch == '3':
-                return
+                return True
             else:
-                print("invalid choice")
+                print("Invalid choice")
 
     def complain_file(self):
         try:
@@ -31,23 +29,35 @@ class employee:
             description = input("Enter all the details about incident please: ")
             working_zone = input("Enter working zone where incident happened: ")
             if description and working_zone:
+                accident_list = ["fire breakout", "gas leakage", "infrastructure damages", "other"]
+                complain_type = None
+                print("Choose complain type \n 1.Fire Breakout 2.Gas Leakage 3.Infrastructure Damages 4.Other")
+                ch = (input("Write your complain type: ")).lower()
+                while not ch in accident_list:
+                    print("Entered complain type doesnt exist")
+                    ch = (input("Write your complain type: ")).lower()
+                connection = repo.sql_connection()
                 cursor = connection.cursor()
                 cursor.execute(
                     "INSERT into complains(complain_id,description,working_zone,role_id,status,created_at,"
-                    "delete_value,verdict) Values(\'{}\',\'{}\', "
-                    "\'{}\', \'{}\',\'{}\',\'{}\',\'{}\',\'{}\')".format(complain_id, description, working_zone,
-                                                                         self.role_id,
-                                                                         "open", created_at, "False", 'False'))
+                    "delete_value,verdict,complain_type) Values(\'{}\',\'{}\', "
+                    "\'{}\', \'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\')".format(complain_id, description, working_zone,
+                                                                                self.role_id,
+                                                                                "open", created_at, "False", 'False',
+                                                                                complain_type))
                 connection.commit()
                 cursor.close()
+                print("Your complain is filed")
                 return True
-            print("Description or working zone is empty")
+            print("Description or working zone is empty..Try again")
             return False
         except Error as e:
             print(e)
+            return False
 
     def show_complain(self):
         try:
+            connection = repo.sql_connection()
             cursor = connection.cursor()
             records = cursor.execute(
                 "select complain_id,description,working_zone,status,created_at from complains where delete_value = "

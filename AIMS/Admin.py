@@ -1,25 +1,28 @@
 import datetime
 import re
 import uuid
+from calendar import calendar
+
 from cryptography.fernet import Fernet
 import getpass
+import pandas as pd
+# import matplotlib.pyplot as plot
 
 import AIMS.Repository as repo
 from sqlite3 import Error
-
-connection = repo.sql_connection()
 
 
 class admin:
 
     def select_choice(self):
         ch = ''
-        while ch != 8:
+        while ch != "10":
             print("ADMIN MENU")
             print(
                 "1.ADD MEMBER 2.UPDATE MEMBER 3.DELETE MEMBER 4.CREATE TEAM 5.UPDATE TEAM 6.DELETE TEAM 7.GIVE "
-                "JUDGEMENT 8.EXIT")
+                "JUDGEMENT 8.VISUALISE DATA 9.VISUALISE ACCIDENTS 10.EXIT")
             ch = input("Select Your Option (1-8): ")
+            print(ch)
             if ch == '1':
                 self.create_member()
             elif ch == '2':
@@ -34,9 +37,14 @@ class admin:
                 self.delete_team()
             elif ch == '7':
                 self.final_judgement()
+            elif ch == '8':
+                self.visualise_data()
+            elif ch == '9':
+                self.visualise_accidents()
+            elif ch == '10':
+                return True
             else:
                 print("Invalid choice")
-        return True
 
     def create_member(self):
         print("Creating new member")
@@ -48,14 +56,15 @@ class admin:
         role_id = str(uuid.uuid4())
         working_zone = input("Insert member's working zone: ")
         name = input("Enter employee name: ")
-        phone_number = ''
         while not "".join(name.split(' ')).isalpha():
             name = input("Enter employee name: ")
 
-        while not phone_number.isnumeric():
+        phone_number = input(("Enter the phone number: "))
+        while not phone_number.isdigit():
             phone_number = input("Enter employee phone number: ")
 
         try:
+            connection = repo.sql_connection()
             cursor = connection.cursor()
             cursor.execute(
                 "INSERT INTO login(username,password,role_name,role_id,created_at,delete_value) VALUES(\'{}\',\'{}\',"
@@ -174,23 +183,22 @@ class admin:
                     cursor.execute(
                         "UPDATE employee SET working_zone = \'{}\' WHERE role_id = \'{}\'".format(new_working_zone,
                                                                                                   role_id))
-
                 elif ch == '2':
                     name = input("Enter new name: ")
                     if "".join(name.split(' ')).isalpha():
                         cursor.execute("UPDATE employee SET name = \'{}\' WHERE role_id = \'{}\'".format(name, role_id))
-                    print("Name should only consist of alphabets")
-                    pass
+                    else:
+                        print("Name should only consist of alphabets")
                 elif ch == '3':
                     phone_number = input("Enter new phone number: ")
-                    if phone_number.isnumeric():
+                    if phone_number.isdigit():
                         cursor.execute(
                             "UPDATE employee SET phone_number = \'{}\' WHERE role_id = \'{}\'".format(phone_number,
                                                                                                       role_id))
-                    print("Phone number should be only numeric")
-                    pass
+                    else:
+                        print("Phone number should be only numeric")
                 else:
-                    return
+                    return False
         print("Role id didn't match....try again")
         self.is_updated(cursor)
 
@@ -201,7 +209,7 @@ class admin:
             cursor = connection.cursor()
             records = cursor.execute(
                 "select complain_id,description,working_zone,status,created_at from complains where delete_value = "
-                "'False' and status = 'working'".format()).fetchall()
+                "'False' and status = 'open'".format()).fetchall()
             if records:
                 for row in records:
                     print("complain_id= ", row[0])
@@ -235,23 +243,33 @@ class admin:
                         else:
                             print("Error with the role id.Role id cannot be added....try again")
                     elif n == '2':
-                        print("Okay")
+                        break
                     else:
                         print("Invalid choice")
                 team_id = str(uuid.uuid4())
+                team_name = input("Enter the team name: ")
+                while not self.validate_team_name(team_name, cursor):
+                    print("Entered team name already exist....try again")
+                    team_name = input("Enter the team name: ")
+                while not team_name.isalpha():
+                    print("Entered team name is not right....try again")
+                    team_name = input("Enter the team name: ")
                 password = self.input_password()
                 while not password:
                     password = self.input_password()
                 cursor.execute(
-                    "INSERT INTO supervising_team(team_id,role_ids,complain_id,created_at,delete_value,password) VALUES(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\')".format(
+                    "INSERT INTO supervising_team(team_id,role_ids,complain_id,created_at,delete_value,password,"
+                    "team_name) VALUES(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\')".format(
                         team_id, member_list,
                         complain_id,
                         str(datetime.datetime.today()),
                         False,
-                        password.decode()))
+                        password.decode(), team_name))
                 cursor.execute("UPDATE complains SET status = 'working' WHERE complain_id = \'{}\'".format(complain_id))
                 connection.commit()
                 cursor.close()
+                print("Your team has been created")
+                return True
             else:
                 print("There are no members to  be added")
                 return False
@@ -295,8 +313,8 @@ class admin:
                                 role_id = input("Entred role id is wrong...enter again: ")
                             roles_list = roles_list + role_id + ','
                             cursor.execute(
-                                "UPDATE supervising_team SET role_ids = \'{}\' WHERE complain_id = \'{}\'".format(
-                                    roles_list, complain_id))
+                                "UPDATE supervising_team SET role_ids = \'{}\',updated_at = \'{}\' WHERE complain_id = \'{}\'".format(
+                                    roles_list, datetime.datetime.today(), complain_id))
                             connection.commit()
                             cursor.close()
                             return True
@@ -323,7 +341,7 @@ class admin:
                             role_id = input("Entred role id is wrong...enter again: ")
                         temp_roles_list.remove(role_id)
                         new_roles_list = ''
-                        for i in range(len(temp_roles_list) - 1):
+                        for i in range(len(temp_roles_list)):
                             new_roles_list = new_roles_list + temp_roles_list[i] + ','
                         cursor.execute(
                             "UPDATE supervising_team SET role_ids = \'{}\' WHERE complain_id = \'{}\'".format(
@@ -408,7 +426,7 @@ class admin:
                     print("Entered complain id is wrong")
                     complain_id = input("Enter the complain id for which you want to give judgement: ")
                 verdict = input("Give your final verdict: ")
-                while not "".join(verdict.split(' ')).isalnum():
+                while not "".join(verdict.split(' ')).isalpha():
                     print("Give a proper verdict")
                     verdict = input("Give your final verdict: ")
                 cursor.execute(
@@ -423,10 +441,47 @@ class admin:
             print(e)
             return False
 
-# admin().update_member()
-# admin().create_member()
-# admin().delete_member()
-# admin().create_team()
-# admin().delete_team()
-# admin().update_team()
-# admin().final_judgement()
+    def validate_team_name(self, team_name, cursor):
+        try:
+            if cursor.execute("SELECT * FROM supervising_team where team_name=\'{}\'".format(team_name)).fetchall():
+                return False
+            return True
+        except Error as e:
+            print(e)
+            return False
+
+    def visualise_data(self):
+        # try:
+        #     connection = repo.sql_connection()
+        #     query = "select * from complains"
+        #     df = pd.read_sql_query(query, connection)
+        #     df['date'] = pd.to_datetime(df['created_at'])
+        #     df['month'] = df['date'].dt.month
+        #     df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
+        #     df_result = df.groupby(['month']).complain_id.agg('count').to_frame(
+        #         'number_of_cases').reset_index()
+        #     df_result = pd.DataFrame(df_result)
+        #     df_result = df_result.sort_values("month", ascending=False)
+        #     df_result.plot(x="month", y="number_of_cases", kind="bar")
+        #     plot.show()
+        #     return True
+        # except Error as e:
+        #     print(e)
+        #     return False
+        pass
+
+    def visualise_accidents(self):
+        # try:
+        #     connection = repo.sql_connection()
+        #     query = "select complains.complain_type,report.injured_people,report.dead_people as casualty_rate from " \
+        #             "complains INNER JOIN final_report report using(complain_id) "
+        #     df = pd.read_sql_query(query, connection)
+        #     df = df.groupby('complain_type')['casualty_rate'].sum().reset_index()
+        #     df = pd.DataFrame(df)
+        #     df.plot(x="complain_type", y="casualty_rate", kind="bar")
+        #     plot.show()
+        #     print(df)
+        # except Error as e:
+        #     print(e)
+        #     return False
+        pass
